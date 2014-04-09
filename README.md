@@ -8,6 +8,8 @@ C'est vrai, mais j'ai remarqué en changeant de lecteurs plusieurs fois, qu'ils 
 manière. Ce qui fait qu'en passant d'un lecteur à l'autre, vous pourriez ne pas voir les mêmes informations sur vos chansons.
 Pire, certains lecteurs propriétaires (dont je tairais le nom), modifient les tags à leur sauce et ensuite, c'est le bordel :-(
 
+![liste des artistes](screenshots/artists.png "Liste des artistes")
+
 ## Prerequisites
 * Node.js - Download and Install [Node.js](http://www.nodejs.org/download/). You can also follow [this gist](https://gist.github.com/isaacs/579814) for a quick and easy way to install Node.js and npm
 
