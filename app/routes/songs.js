@@ -14,8 +14,6 @@ module.exports = function(app) {
   app.put('/songs/multi', songs.updateMulti);
   app.put('/songs/:songId', songs.update);
   app.del('/songs/:songId', songs.destroy);
-  app.get('/database/search', songs.findOnDiscogs);
-  app.get('/discogs/cover', songs.coverDiscogs);
 
   // Finish with setting up the songId param
   app.param('songId', songs.song);
