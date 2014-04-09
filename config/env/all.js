@@ -13,7 +13,20 @@ module.exports = {
   sessionSecret: 'MEAN',
   // The name of the MongoDB collection to store sessions in
   sessionCollection: 'sessions',
-  coversDirectory: rootPath + '/dbs/covers'
+  coversDirectory: rootPath + '/dbs/covers',
+  db: {
+    songs: rootPath + '/dbs/songs.db',
+    libraries: rootPath + '/dbs/libraries.db'
+  },
+  app: {
+    name: 'Music Server'
+  },
+  discogs: {
+    consumer: {
+      key: 'Your consumer key of Discogs',
+      secret: 'Your consumer secret of Discogs'
+    }
+  }
 };
 
 /* vim: set ts=2 sw=2 et ai: */

@@ -13,8 +13,8 @@ exports.auth = function(req, res) {
   var oa = new OAuth(
     'http://api.discogs.com/oauth/request_token',
     'http://api.discogs.com/oauth/access_token',
-    'nRlVlEgtKFSiYpBwSXXb', // your application consumer key
-    'zBrdDqBxFeFujJeFDImFsFklmJeTysuO', // your application secret
+    config.discogs.consumer.key, // your application consumer key
+    config.discogs.consumer.secret, // your application secret
     '1.0A',
     'http://localhost:3000/discogs/cb' + ( req.param('action') && req.param('action') !== '' ? '?action=' + querystring.escape(req.param('action')) : '' ),
     'HMAC-SHA1'

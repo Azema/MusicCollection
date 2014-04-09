@@ -1,0 +1,8 @@
+.DS_Store
+.nodemonignore
+.bower-*/
+node_modules/
+dbs/
+public/lib
+public/build/
+config/env/development.js
