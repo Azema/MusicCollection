@@ -1,0 +1,10 @@
+<section data-ng-controller="ArtistsController" data-ng-init="find()">
+  <div class="artistList" infinite-scroll="addArtists()" infinite-scroll-disabled="busy" infinite-scroll-distance="0.1">
+    <ul>
+      <li ng-click="showArtist(artist)" ng-repeat="artist in artists" ng-class="{'first':$index%3==0,'second':$index%3==1, 'third': $index%3==2}">
+        <covers data-albums="{{artist.albums}}"></covers>
+        <p>{{artist.artist}}</p>
+      </li>
+    </ul>
+  </div>
+</section>

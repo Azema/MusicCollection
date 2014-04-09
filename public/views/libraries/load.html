@@ -1,0 +1,36 @@
+<section data-ng-controller="LibrariesController" class="libraries">
+	<form class="form-horizontal col-md-6" role="form">
+		<div class="form-group">
+			<label for="name" class="col-md-2 control-label">Collection name</label>
+			<div class="col-md-10">
+				<input type="text" class="form-control" data-ng-model="name" id="name" placeholder="collection's name" required>
+			</div>
+		</div>
+    <div class="form-group">
+      <label for="path" class="col-md-2 control-label">Collection path</label>
+      <div class="col-md-10">
+        <input type="text" class="form-control" data-ng-model="path" id="path" placeholder="Path to collection" required>
+      </div>
+    </div>
+		<div class="form-group">
+			<div class="col-md-offset-2 col-md-10">
+				<button data-ng-click="load()" class="btn btn-default" ng-disabled="confirm">Submit</button>
+        <img src="/img/loaders/loader.gif" ng-show="loading">
+        <button data-ng-click="scan()" class="btn btn-default btn-primary" ng-show="confirm" ng-disabled="stopped">Confirm</button>
+        <button data-ng-click="stop()" class="btn btn-default btn-warning" ng-show="confirm && scanning">Stop</button>
+      </div>
+		</div>
+	</form>
+  <br style="clear: both;">
+  <div class="" data-ng-show="confirm">
+    <progressbar data-ng-show="scanning" class="progress-striped active" value="dynamic">{{dynamic}}%</progressbar>
+    <p class="scan_details">{{details}}</p>
+    <p ng-if="libraryId">Visualiser votre <a ng-href="#!/songs/{{libraryId}}">bibliothèque</a>.</p>
+    <ul ng-if="errorFiles">
+      <li ng-repeat="errorFile in errorFiles">{{errorFile}}</li>
+    </ul>
+  </div>
+  <div class="" ng-show="error">
+    <p class="alert-warning">{{error}}</p>
+  </div>
+</section>

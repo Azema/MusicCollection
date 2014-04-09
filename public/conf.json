@@ -1,0 +1,16 @@
+{
+  "tags": {},
+  "source": {
+    "include": ["js"]
+  },
+  "plugins": [
+    "plugins/markdown"
+  ],
+  "markdown": {
+    "parser": "gfm"
+  },
+  "opts": {
+    "destination": "./docs",
+    "recurse": true
+  }
+}

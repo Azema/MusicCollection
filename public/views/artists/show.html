@@ -1,0 +1,12 @@
+<section data-ng-controller="ArtistsController" data-ng-init="findOne()">
+  <h2>{{artist}}</h2>
+  <div class="artistList">
+    <ul>
+		<li ng-repeat="album in albums" ng-class="{'first':$index%3==0,'second':$index%3==1, 'third': $index%3==2}">
+			<img ng-click="showAlbum(album)" ng-src="/cover/{{album.cover_location}}" title="{{album.album}}" alt="cover {{album.album}}"/>
+			<p>{{album.album}}</p>
+      </li>
+    </ul>
+  </div>
+</section>
+

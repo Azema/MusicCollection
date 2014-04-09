@@ -1,0 +1,17 @@
+<div class="" data-ng-controller="HeaderController">
+  <!--<ul class="navbar-nav nav">-->
+    <!--<li>-->
+      <!--<a class="navbar-brand" href="/">MusicCollection</a>-->
+    <!--</li>-->
+    <!--<li data-ng-repeat="item in menu"  ui-route="/{{item.link}}" ng-class="{active: $uiRoute}">-->
+      <!--<a ng-href="#!/{{item.link}}">{{item.title}}</a>-->
+    <!--</li>-->
+  <!--</ul>-->
+  <div data-menu="menu" class="nav navbar-nav"></div>
+  <form class="navbar-form navbar-right" role="search">
+    <div class="form-group has-feedback">
+      <input id="search" type="text" class="form-control" placeholder="Search" ng-model="search">
+      <span ng-show="search" ng-click="search=''" class="glyphicon glyphicon-remove-circle form-control-feedback"></span>
+    </div>
+  </form>
+</div>

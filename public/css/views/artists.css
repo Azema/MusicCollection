@@ -1,0 +1,58 @@
+.artistList {
+
+}
+.artistList ul {
+  list-style-type: none;
+}
+.artistList li {
+  display: inline-block;
+  /*margin-right: 150px;*/
+  margin-top: 75px;
+  text-align: center;
+  position: relative;
+  height: 200px;
+}
+.artistList li.first {
+  text-align: center;
+  width: 33%;
+}
+.artistList li.second {
+  text-align: center;
+  width: 33%;
+}
+.artistList li.third {
+  text-align: center;
+  width: 33%;
+}
+.artistList li img {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  height: 150px;
+  position: absolute;
+  left:35%;
+}
+/*.artistList li img:nth-child(1) {
+  left: 35%;
+}
+.artistList li img:nth-child(2) {
+  left: 15%;
+  z-index: -1;
+  *//*-webkit-transform: rotate(-40deg) scale(1);
+  -moz-transform: rotate(-40deg) scale(1);
+  transform: rotate(-40deg) scale(1);*//*
+ }
+.artistList li img:nth-child(3) {
+  left: 50%;
+  z-index: -1;
+  *//*-webkit-transform: rotate(40deg) scale(1);
+  -moz-transform: rotate(40deg) scale(1);
+  transform: rotate(40deg) scale(1);*//*
+}*/
+.artistList li p {
+  display: block;
+  margin-top: 180px;
+  font-size: 1.2em;
+  /*font-family: Tahoma;*/
+  font-family: "Helvetica Neue Light", "HelveticaNeue-Light", "Helvetica Neue", Calibri, Helvetica, Arial;
+}

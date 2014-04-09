@@ -1,0 +1,34 @@
+<div class="tracklist" ng-controller="AlbumsController" ng-init="find()">
+	<div class="body">
+		<div class="image">
+			<img ng-if="cover" ng-src="/cover/{{cover}}" alt="Cover" title="{{album}}"/>
+		</div>
+		<div class="profile">
+			<h1><a ng-click="showArtist(artist)">{{artist}}</a> - <span editable-text="album" e-typeahead="aAlbum for aAlbum in getAlbums($viewValue) | filter:$viewValue" e-typeahead-loading="loadingAlbums" onaftersave="updateSongs({album: $data})">{{album}}</span></h1>
+			<div class="head">Released:</div>
+			<div class="content" editable-text="year" onbeforesave="checkYear($data)" onaftersave="updateSongs({year: $data})">{{year}}</div>
+			<div class="head">Genre:</div>
+			<div editable-text="genre" e-typeahead="aGenre for aGenre in getGenres($viewValue) | filter:$viewValue" e-typeahead-loading="loadingGenres" onaftersave="updateSongs({genre: $data})" class="content">{{genre}}</div>
+			<div class="content">Search on <a style="cursor:pointer;" ng-click="findOnDiscogs()">Discogs <img src="/img/icons/discogs.ico"/></a></div>
+		</div>
+	</div>
+	<h3>Tracklist</h3>
+	<table class='table table-bordered song_table disable_selection'>
+		<thead>
+			<tr>
+				<th style="width:5%;" class="track_th">Track</th>
+				<th class="title_th">Title</th>
+				<th style="width:5%;text-align:center;" class="duration_th"><i class="fa fa-clock-o"></i></th>
+				<th style="width:5%;" class="bitrate_th">Bitrate</th>
+			</tr>
+		</thead>
+		<tbody class='song_body' data-ng-show="songs.length">
+			<tr id="{{song._id}}" ng-repeat="song in songs" class="{{song.artist|normalize}} {{song.album|normalize}}">
+				<td style="text-align:center;" editable-text="song.track" onbeforesave="checkTrack($data)" onaftersave="song.$update()">{{song.track}}</td>
+				<td><span style="padding-left:5px;" class='song_text'>{{song.title|mcLimitTo:255}}</span></td>
+				<td style="text-align:center;">{{song.duration|duration}}</td>
+				<td style="text-align:right;">{{song.bitrate}} kbps</td>
+			</tr>
+		</tbody>
+	</table>
+</div>

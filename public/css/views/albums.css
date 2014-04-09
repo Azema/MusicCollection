@@ -1,0 +1,36 @@
+.tracklist .body {
+	position:relative;margin-bottom:10px;min-height:150px;
+}
+.tracklist .body .image {
+	float:left;height:150px;padding:0 10px;box-sizing:border-box;
+}
+.tracklist .body .image img {
+	max-width:150px;max-height:150px;height:auto;
+}
+.tracklist .body .profile {
+	padding-left: 164px;
+}
+.tracklist .body .profile h1 {
+	margin:0;padding-bottom:5px;font-size:20px;line-height:20px;text-align:left;
+}
+.tracklist .body .profile h1 a {
+	text-decoration: none;cursor:pointer;color:#03b;
+}
+.tracklist .body .profile .head {
+	display:inline;float:left;width:90px;margin:0;padding:0;
+}
+.tracklist .body .profile .content {
+	padding-left:95px;word-wrap:break-word;min-height:1.4em;padding-bottom:3px;margin-top:0;
+}
+.tracklist h3 {
+	margin:0;font-size:15px;line-height:20px;padding:5px;
+	display: block;
+	-webkit-margin-before: 1em;
+	-webkit-margin-after: 1em;
+	-webkit-margin-start: 0px;
+	-webkit-margin-end: 0px;
+	font-weight: bold;
+}
+.tracklist .table thead th {
+	text-align: center;
+}

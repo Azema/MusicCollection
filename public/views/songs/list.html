@@ -1,0 +1,58 @@
+<section data-ng-controller="SongsController" data-ng-init="find()">
+  <div data-ng-show="details" class="details details-animation" ng-class="{'details-visible':detailsVisible}">
+    <div class="details-nav">
+      <div ng-show="!detailsVisible">
+        <button class="btn pull-left" ng-click="setDetailsVisible()"><i class="glyphicon glyphicon-chevron-left"></i></button>
+      </div>
+      <div ng-show="detailsVisible">
+        <button class="btn pull-right" ng-click="setDetailsVisible()"><i class="glyphicon glyphicon-chevron-right"></i></button>
+      </div>
+    </div>
+    <div ng-show="detailsVisible" class="my-fade-animation detailsVisible" ng-switch="detailsType">
+      <div song-details="detailsSong" ng-switch-when="song"></div>
+      <div album-details="detailsAlbum" ng-switch-when="album"></div>
+      <div artist-details="detailsArtist" ng-switch-when="artist"></div>
+    </div>
+  </div>
+  <div class="songList">
+    <table class='table song_table disable_selection'>
+      <thead>
+      <th class='title_th'>Title</th>
+      <th class='artist_th'>Artist</th>
+      <th class='album_th'>Album</th>
+      <th class='genre_th'>Genre</th>
+      <th class='year_th'>Year</th>
+      <th class='duration_th'><i class="fa fa-clock-o"></i></th>
+      </thead>
+      <tbody class='song_body' data-ng-show="songs.length">
+      <tr id="{{song._id}}" ng-repeat="song in songs" class="{{song.artist|normalize}} {{song.album|normalize}}">
+        <td class="clickable" ng-click="showDetails('song', song)" title="{{song.title}}"><span class='song_text'>{{song.title|mcLimitTo:255}}</span></td>
+        <td class="clickable" ng-click="showArtist(song.artist)" title="{{song.artist}}">{{song.artist|mcLimitTo:30}}</td>
+        <td class="clickable" ng-click="showAlbum(song)" title="{{song.album}}">{{song.album|mcLimitTo:30}}</td>
+        <td title="{{song.genre}}">{{song.genre|mcLimitTo:30}}</td>
+        <td>{{song.year}}</td>
+        <td>{{song.duration|duration}}</td>
+      </tr>
+      </tbody>
+      <tfoot>
+      <tr ng-if="(!songs || !songs.length) && library">
+        <td colspan="6" style="font-size:1.5em;text-align:center;">No songs in that library. <a ng-href="/#!/libraries/add/{{library._id}}">Add songs</a></td>
+      </tr>
+      </tfoot>
+    </table>
+    <pagination data-ng-show="songs.length" boundary-links="true" ng-click="find()" total-items="totalItems" items-per-page="itemsPerPage" max-size="5" page="currentPage" class="pagination-sm" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></pagination>
+    <h1 data-ng-if="(!songs || !songs.length) && !library">No songs yet. <br> Why don't you <a href="/#!/libraries/load">scan your library</a>?</h1>
+    <div ng-if="library" class="navbar navbar-fixed-bottom status-bar">
+      <div class="navbar-inner">
+        <div class="container">
+          <ul class="nav" id="nav-status-bar">
+            <li><span>Collection: {{library.title}}</span></li>
+            <li><span>Nombre de chansons: {{library.nbSongs}}</span></li>
+            <li><span>Durée totale: {{library.time | duration:true}}</span></li>
+            <li ng-if="criteria">Search count: {{totalItems}}<span></span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

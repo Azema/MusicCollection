@@ -1,0 +1,65 @@
+{
+  "name": "musicServer",
+  "description": "Server for manage collection of music",
+  "version": "0.0.1",
+  "private": false,
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "engines": {
+    "node": "0.10.x",
+    "npm": "1.3.x"
+  },
+  "scripts": {
+    "start": "node node_modules/grunt-cli/bin/grunt",
+    "test": "node node_modules/grunt-cli/bin/grunt test",
+    "postinstall": "node node_modules/bower/bin/bower install"
+  },
+  "dependencies": {
+    "assetmanager": "^0.1.1",
+    "bower": "~1.2.8",
+    "grunt-cli": "~0.1.11",
+    "connect-flash": "~0.1.1",
+    "consolidate": "~0.10.0",
+    "swig": "~1.3.2",
+    "passport": "~0.1.18",
+    "passport-local": "~0.1.6",
+    "lodash": "~2.4.1",
+    "forever": "~0.10.11",
+    "view-helpers": "~0.1.4",
+    "mean-logger": "0.0.1",
+    "nedb": "^0.10.4",
+    "MD5": "^1.2.0",
+    "debug": "^0.7.4",
+    "express.io": "^1.1.13",
+    "findit": "^1.1.1",
+    "musicmetadata": "^0.3.4",
+    "express": "^3.5.1",
+    "oauth": "^0.9.11"
+  },
+  "devDependencies": {
+    "grunt-env": "~0.4.1",
+    "grunt-contrib-cssmin": "^0.9.0",
+    "grunt-contrib-uglify": "^0.4.0",
+    "grunt-contrib-watch": "latest",
+    "grunt-contrib-csslint": "^0.2.0",
+    "grunt-contrib-jshint": "latest",
+    "grunt-karma": "~0.6.2",
+    "grunt-nodemon": "0.2.0",
+    "grunt-concurrent": "latest",
+    "grunt-mocha-test": "latest",
+    "karma": "~0.10.4",
+    "karma-coffee-preprocessor": "~0.1.0",
+    "karma-coverage": "~0.1.0",
+    "karma-script-launcher": "~0.1.0",
+    "karma-chrome-launcher": "~0.1.0",
+    "karma-firefox-launcher": "~0.1.0",
+    "karma-html2js-preprocessor": "~0.1.0",
+    "karma-jasmine": "~0.1.3",
+    "karma-requirejs": "~0.2.0",
+    "karma-phantomjs-launcher": "~0.1.0",
+    "supertest": "0.8.2",
+    "should": "2.1.1"
+  }
+}

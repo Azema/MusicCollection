@@ -1,0 +1,19 @@
+<div>
+	<p>Nb results: {{pagination.items}}</p>
+	<div class="release" ng-repeat="release in releases">
+		<div class="panel panel-primary">
+			<div class="panel-heading">
+				<h3 ng-click="open=!open" ng-init="open=false" style="cursor:pointer;" class="panel-title">{{release.title}} <b class="caret"></b></h3>
+			</div>
+			<div class="panel-body" ng-show="open" style="position:relative;">
+				<p>Type: {{release.type}}</p>
+				<p>Genre: {{release.genre.join(', ')}}</p>
+				<p>Year: {{release.year}}</p>
+				<p>Country: {{release.country}}</p>
+				<p>Format: {{release.format.join(', ')}}</p>
+				<p><a ng-href="http://www.discogs.com{{release.uri}}" target="_blank">View on Discogs</a></p>
+				<img ng-src="{{release.thumb}}" ng-if="open" style="max-height:150px;max-width:150px;position:absolute;top:0;right:0;"/>
+			</div>
+		</div>
+	</div>
+</div>

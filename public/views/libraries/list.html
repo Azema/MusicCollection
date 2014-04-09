@@ -1,0 +1,24 @@
+<section data-ng-controller="LibrariesController" data-ng-init="find()" class="libraries">
+  <table data-ng-show="libraries.length" class='table song_table disable_selection'>
+    <thead>
+    <th class='title_th'>Title</th>
+    <th class='artist_th'>nb songs</th>
+    <th class='duration_th'><i class="fa fa-clock-o"></i></th>
+    <th>Actions</th>
+    </thead>
+    <tbody class='library_body'>
+      <tr id="{{library._id}}" ng-repeat="library in libraries" title="{{library.paths.join('\n')}}">
+        <td><span class='song_text'>{{library.title}}</span></td>
+        <td>{{library.nbSongs}}</td>
+        <td>{{library.time|duration:true}}</td>
+        <td>
+          <a ng-href="/#!/songs/{{library._id}}">List songs</a>
+          &nbsp;| <a ng-href="/#!/libraries/add/{{library._id}}">Add songs</a>
+          &nbsp;| <a ng-click="remove(library)"><i class="glyphicon glyphicon-remove-circle"></i></a>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <pagination data-ng-show="libraries.length > itemsPerPage" boundary-links="true" ng-click="find()" total-items="totalItems" items-per-page="itemsPerPage" max-size="5" page="currentPage" class="pagination-sm" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></pagination>
+	<h1 data-ng-hide="!libraries || libraries.length">No libraries yet. <br> Why don't you <a href="/#!/libraries/load">scan your library</a>?</h1>
+</section>

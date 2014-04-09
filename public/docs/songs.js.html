@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: songs.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: songs.js</h1>
+
+    
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>'use strict';
+
+/**
+ * Module des chansons
+ *
+ * Dépendances:
+ *  - ngAnimate
+ *  - xeditable
+ *  - animations.details
+ *  - directives.songDetails
+ *  - directives.albumDetails
+ *  - directives.artistDetails
+ */
+angular.module('musicCollection.songs', [
+  'ngAnimate',
+  'animations.details',
+  'xeditable',
+  'directives.songDetails',
+  'directives.albumDetails',
+  'directives.artistDetails'
+])
+/**
+ * Controleur des chansons
+ */
+  .controller('SongsController', [
+    '$scope',
+    '$http',
+    '$stateParams',
+    '$location',
+    'Songs',
+    'mySocket',
+    '$filter',
+    function ($scope, $http, $stateParams, $location, Songs, mySocket, $filter) {
+
+      mySocket.forward('update', $scope);
+      mySocket.forward('error', $scope);
+
+      /**
+       * Fonction de recherche des chansons. Il existe plsuieurs possibilités de recherche:
+       *  - Le mode par défaut, la recherche se fait sur les champs 'artist', 'album' &amp; 'title'
+       *  - Sinon, il est possible de spécifier un champ de recherche en particulier (un seul à la fois):
+       *    * 'at:' permet de filtrer seulement sur les artistes
+       *    * 'ti:' permet de filtrer seulement sur les titres des chansons
+       *    * 'al:' permet de filtrer seulement sur les albums
+       *
+       * @event HeaderController#search
+       *
+       * @param {Event}  event - L'évènement de la recherche déclenché par le controller header.js
+       * @param {String} value - La valeur de la requête
+       */
+      $scope.$on('search', function(event, value) {
+        //console.log(event);
+        event.preventDefault();
+        //console.log('songs scope: ' + value);
+        var q = {};
+        if (value !== '' &amp;&amp; value !== undefined) {
+          var re = new RegExp(':', 'g');
+          if (!re.test(value)) {
+            q = { $or: [
+              { display_artist: { $regex: value.trim() } },
+              { album: { $regex: value.trim() } },
+              { title: { $regex: value.trim() } }
+            ]};
+          } else {
+            var addToQ = function(q, data) {
+              var keys = Object.keys(q);
+              if (keys.length > 0 &amp;&amp; keys[0] !== '$or') {
+                var newQ = {
+                  $or: []
+                };
+                for (var i in q) {
+                  newQ.$or.push(q[i]);
+                }
+                newQ.$or.push(data);
+                q = newQ;
+              } else if (keys.length &lt;= 0) {
+                q = data;
+              }
+              return q;
+            };
+            var data = [
+              {key: 'display_artist', reg: 'at'},
+              {key: 'title', reg: 'ti'},
+              {key: 'album', reg: 'al'}
+            ];
+            var result, val, obj;
+            for (var i in data) {
+              re = new RegExp(data[i].reg + ':([^:]*)');
+              result = value.match(re);
+              if (result &amp;&amp; result.length > 1) {
+                val = result[1].trim();
+                console.log(val);
+                if (val !== '') {
+                  obj = {};
+                  obj[data[i].key] = {$regex: val};
+                  q = addToQ(q, obj);
+                }
+                console.log(q);
+              }
+            }
+          }
+        }
+        $scope.find(q);
+      });
+
+      $scope.detailsVisible = true; // Affiche ou non les détails en laissant la barre de navigation visible
+      $scope.detailsSong = false; // La ressource pour les détails d'une chanson
+      $scope.detailsAlbum = false; // La ressource pour les détails d'un album
+      $scope.detailsArtist = false; // La ressource pour les détails d'un artist
+      $scope.details = false; // Boolean pour afficher ou non le bloc complet des détails
+      $scope.detailsType = null; // stocke le type d'infos pour le switch dans la template
+      var oldDetails = {type:null, id:null}; // stocke la référence et le type d'informations qui ont été demandées
+
+      /**
+       * Définit le type d'informations détaillées à afficher:
+       *  - une chanson
+       *  - un album
+       *  - un artiste
+       * Affecte les variables nécessaires aux directives.
+       *
+       * @param {string}   type - Le type d'informations à afficher
+       * @param {Resource} song - La ressource de la chanson
+       */
+      $scope.showDetails = function(type, song) {
+        if (oldDetails.type === type &amp;&amp;
+          (oldDetails.id === song._id ||
+            oldDetails.id === $filter('normalize')(song.album) ||
+            oldDetails.id === $filter('normalize')(song.display_artist)
+          )
+        ) {
+          $scope.details = !$scope.details;
+          var items = null;
+          if (oldDetails.type === 'song') {
+            items = $('tr#' + song._id);
+          } else if (oldDetails.type === 'album') {
+            items = $('tr.' + $filter('normalize')(song.album));
+          } else if (oldDetails.type === 'artist') {
+            items = $('tr.' + $filter('normalize')(song.display_artist));
+          }
+          if ($scope.details &amp;&amp; items) {
+            items.addClass('light-blue');
+          } else if (items) {
+            items.removeClass('light-blue');
+          }
+          return;
+        }
+        $scope.detailsType = type; // pour le switch dans la template
+        if (type === 'song') {
+          $scope.detailsSong = song;
+          oldDetails.id = song._id;
+        } else if (type === 'album') {
+          $scope.detailsAlbum = song;
+          oldDetails.id = $filter('normalize')(song.album);
+        } else if (type === 'artist') {
+          $scope.detailsArtist = song;
+          oldDetails.id = $filter('normalize')(song.display_artist);
+        }
+        oldDetails.type = type; // stocke le type de détails demandés
+        $scope.details = true; // On affiche les détails
+        $scope.detailsVisible = true; // Affiche le panneau des détails
+      };
+
+      /**
+       * Permet d'ouvrir et fermer le panneau latéral
+       * et de mettre en évidence les lignes concernées par les informations dans le panneau.
+       */
+      $scope.setDetailsVisible = function() {
+        $scope.detailsVisible = !$scope.detailsVisible;
+        if (!$scope.detailsVisible) {
+          $('.song_table tbody tr').removeClass('light-blue');
+        } else if (oldDetails.id &amp;&amp; oldDetails.type === 'song') {
+          $('tr#' + oldDetails.id).addClass('light-blue');
+        } else if (oldDetails.id &amp;&amp; (oldDetails.type === 'album' || oldDetails.type === 'artist')) {
+          $('tr.' + oldDetails.id).addClass('light-blue');
+        }
+      };
+
+      $scope.remove = function(song) {
+        if (song) {
+          song.$remove();
+
+          for (var i in $scope.songs) {
+            if ($scope.songs[i] === song) {
+              $scope.songs.splice(i, 1);
+            }
+          }
+        }
+        else {
+          $scope.song.$remove();
+          $location.path('songs');
+        }
+      };
+
+      /**
+       * Permet de mettre à jour une chanson
+       */
+      $scope.update = function() {
+        var song = $scope.song;
+        if (!song.updated) {
+          song.updated = [];
+        }
+        song.updated.push(new Date().getTime());
+
+        song.$update(function() {
+          $location.path('songs/' + song._id);
+        });
+      };
+
+      $scope.currentPage = 1; // Numéro de la page courant pour la pagination
+      $scope.itemsPerPage = 10; // Nombre de chansons par page
+
+      /**
+       * Permet de récupérer et d'afficher les chansons
+       */
+      $scope.find = function() {
+        var params = {
+          page: $scope.currentPage,
+          sort: ['artist', 'track'],
+          limit: $scope.itemsPerPage
+        };
+        if (arguments.length > 0) {
+          params.q = JSON.stringify(arguments[0]);
+        }
+        console.log(params);
+        Songs.query(params, function(songs) {
+          $scope.songs = songs;
+        });
+      };
+
+      /**
+       * Permet de récupérer le nombre total de chansons dans la bibliothèque
+       */
+      $scope.count = function() {
+        $http.get('/songs/count')
+          .success(function(data) {
+            $scope.totalItems = data.count;
+          });
+      };
+      $scope.count();
+
+      /**
+       * Permet de récupérer une chanson
+       */
+      $scope.findOne = function() {
+        Songs.get({
+          songId: $stateParams.songId
+        }, function(song) {
+          $scope.song = song;
+        });
+      };
+
+      /**
+       * Permet de vérifier le format d'une année,
+       * retourne true lorsque c'est correct, sinon retourne un message d'erreur
+       *
+       * @param {string} data - L'année à vérifier
+       * @returns {*}
+       */
+      $scope.checkYear = function(data) {
+        var test = /^\d{4}$/.test(data);
+        if (!test) {
+          return 'Année incorrecte';
+        }
+        return true;
+      };
+
+      /**
+       * Permet de mettre à jour une chanson
+       *
+       * @param {Resource} song - La chanson à mettre à jour
+       */
+      $scope.updateSong = function(song) {
+        $http.put('/songs/'+song._id, song)
+          .error(function(data) {
+            return 'Error: ' + data.msg;
+          });
+      };
+
+      $scope.upload = false; // Flag d'activation de l'analyse de la bibliothèque
+      $scope.dynamic = 0; // Le pourcentage du nombre de chansons analysées
+
+      /**
+       * Permet de récupérer les chansons d'un répertoire ou d'une seule chanson
+       */
+      $scope.load = function() {
+        $scope.details = null;
+        $scope.error = null;
+        mySocket.emit('scan_library', {path: $scope.path});
+        $scope.upload = true;
+      };
+
+      /**
+       * En attente d'une information d'une socket pour chaque chanson analysée
+       *
+       * @event MySocket#update
+       */
+      $scope.$on('socket:update', function(ev, data) {
+        //console.log(data);
+        $scope.details = data.details; // Message affiché
+        $scope.dynamic = Math.round((data.completed * 100) / data.count); // Calcul du pourcentage réalisé
+        // Fin de l'analyse du répertoire
+        if ($scope.dynamic === 100) {
+          $scope.details = 'Félicitations, vous venez d\'ajouter ' + data.count + ' éléments à votre collection';
+          $scope.count(); // Mise à jour du nombre total de chansons dans la bibliothèque
+        }
+      });
+
+      /**
+       * Gère les cas d'erreur retournés par la socket
+       *
+       * @event MySocket#error
+       */
+      $scope.$on('socket:error', function(ev, data) {
+        console.warn(data.msg);
+        $scope.error = data.msg;
+      });
+    }
+  ]
+);
+
+/* vim: set ts=2 sw=2 et ai: */
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Index</a></h2><h3>Events</h3><ul><li><a href="HeaderController.html#event:search">search</a></li><li><a href="MySocket.html#event:error">error</a></li><li><a href="MySocket.html#event:update">update</a></li></ul>
+</nav>
+
+<br clear="both">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-alpha5</a> on Sun Mar 30 2014 19:35:50 GMT+0200 (CEST)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
